@@ -1,0 +1,80 @@
+
+# Redis & MongoDB Security and Performance Lab
+# Protect private configuration and operational data
+
+# Environment variables and credentials
+.env
+.env.*
+!.env.example
+*.secret
+*.key
+*.pem
+*.p12
+*.pfx
+*password*
+*passwd*
+*credentials*
+*token*
+*secret*
+
+# Redis authentication files
+redis_password.txt
+redis_sessions_password.txt
+redis_queue_password.txt
+users.acl
+
+# Redis persistent data
+dump.rdb
+appendonly.aof
+appendonlydir/
+redis-data/
+redis_data/
+redis-sessions-data/
+redis-queue-data/
+
+# MongoDB credentials and authentication
+mongo_root_password.txt
+mongodb_password.txt
+.keyFile
+keyfile
+
+# MongoDB data and audit logs
+mongodb-data/
+mongo-data/
+data/db/
+audit.json
+mongodb/audit/
+*.bson
+*.metadata.json
+
+# Database backups
+*.dump
+*.backup
+*.archive
+*.sql.gz
+*.tar.gz
+backups/
+dumps/
+exports/
+
+# Logs and temporary files
+*.log
+logs/
+tmp/
+temp/
+*.swp
+*~
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.pytest_cache/
+
+# Operating system and editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
