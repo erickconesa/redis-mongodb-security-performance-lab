@@ -1,0 +1,135 @@
+
+# Redis 7.4 - Persistent Session Storage
+# ASIR Infrastructure & NoSQL Security Lab
+#
+# Sanitized educational configuration based on CT-04.
+#
+# This instance is dedicated to session storage.
+# It must remain separate from the disposable cache.
+#
+# No real passwords, hostnames or infrastructure
+# addresses are included.
+
+# --------------------------------------------------
+# NETWORK
+# --------------------------------------------------
+
+# Redis listens inside an isolated Docker network.
+# Port 6379 must not be published externally.
+
+bind 0.0.0.0
+port 6379
+protected-mode yes
+
+# --------------------------------------------------
+# AUTHENTICATION
+# --------------------------------------------------
+
+# Authentication is required in the laboratory.
+# The password is supplied from a protected file.
+#
+# Example:
+#
+# redis-server /path/to/redis-sessions.conf \
+#   --requirepass "$(cat /run/secrets/redis_password)"
+#
+# Never store the actual password in this file
+# or commit the secret to version control.
+
+# --------------------------------------------------
+# MEMORY MANAGEMENT
+# --------------------------------------------------
+
+# Redis data memory limit.
+
+maxmemory 64mb
+
+# Do not automatically evict session keys when
+# the configured memory limit is reached.
+
+maxmemory-policy noeviction
+
+# Docker container resource limits:
+#
+# Memory: 128 MiB
+# CPU:    0.5 CPU
+#
+# Redis maxmemory and the container memory limit
+# are separate controls.
+#
+# Under memory pressure, noeviction can reject
+# new writes instead of discarding stored sessions.
+
+# --------------------------------------------------
+# AOF PERSISTENCE
+# --------------------------------------------------
+
+# Enable Append Only File persistence.
+
+appendonly yes
+
+# Synchronize approximately once per second.
+
+appendfsync everysec
+
+# --------------------------------------------------
+# RDB SNAPSHOTS
+# --------------------------------------------------
+
+# Create a snapshot when at least one key has
+# changed within 300 seconds.
+
+save 300 1
+
+# --------------------------------------------------
+# SESSION STORAGE
+# --------------------------------------------------
+
+# The laboratory configured a session lifetime
+# of 30 minutes in the session management layer.
+#
+# Session TTL is not globally configured here.
+# It is managed when the application writes keys.
+#
+# Observed TTL values were positive and consistent
+# with the configured 30-minute lifetime.
+
+# --------------------------------------------------
+# VALIDATION
+# --------------------------------------------------
+
+# Laboratory checks included:
+#
+# 1. Unauthenticated Redis access -> NOAUTH
+#
+# 2. Authenticated Redis access -> PONG
+#
+# 3. A test value remained available after a
+#    controlled Redis container restart.
+#
+# 4. Session keys were present with positive TTL.
+#
+# 5. HTTP session continuity was observed.
+#
+# 6. Persistent Docker volume was maintained.
+#
+# IMPORTANT:
+# AOF/RDB and Docker volumes improve persistence,
+# but do not guarantee zero data loss or provide
+# automatic high availability.
+
+# --------------------------------------------------
+# SECURITY NOTES
+# --------------------------------------------------
+
+# Authentication secrets must remain outside Git.
+#
+# Session identifiers and cookie values must not
+# be printed in public documentation.
+#
+# HttpOnly and SameSite=Lax were observed during
+# laboratory checks.
+#
+# The local HTTP test observed Secure=False.
+# A production HTTPS deployment should enable
+# the Secure attribute on session cookies.
