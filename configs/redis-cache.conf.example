@@ -1,0 +1,120 @@
+
+# Redis 7.4 - Cache Configuration
+# ASIR Infrastructure & NoSQL Security Lab
+#
+# Sanitized educational example based on CT-02 and CT-03.
+#
+# This configuration applies ONLY to a disposable cache.
+# It must not be reused for persistent sessions or queues.
+
+# --------------------------------------------------
+# NETWORK SECURITY
+# --------------------------------------------------
+
+# Listen on the container network.
+# Docker must provide isolation and must NOT publish
+# TCP port 6379 to the host or public networks.
+
+bind 0.0.0.0
+port 6379
+protected-mode yes
+
+# --------------------------------------------------
+# AUTHENTICATION
+# --------------------------------------------------
+
+# In the laboratory, authentication was configured
+# using a password stored in a protected file.
+#
+# Do NOT write a real password in this repository.
+#
+# Example deployment command:
+#
+# redis-server /path/to/redis-cache.conf \
+#   --requirepass "$(cat /run/secrets/redis_password)"
+#
+# The secret must be provided only at deployment time.
+
+# --------------------------------------------------
+# MEMORY MANAGEMENT
+# --------------------------------------------------
+
+# Maximum memory available for Redis data.
+
+maxmemory 64mb
+
+# Evict less recently used keys when the configured
+# memory threshold is reached.
+
+maxmemory-policy allkeys-lru
+
+# Docker container resources in the laboratory:
+#
+# Memory limit: 128 MiB
+# CPU limit:    0.5 CPU
+#
+# Redis maxmemory and Docker memory limits
+# are different controls.
+#
+# The container requires additional memory
+# for internal Redis processes and overhead.
+
+# --------------------------------------------------
+# RESTRICTED COMMANDS
+# --------------------------------------------------
+
+# Disable selected commands that could cause
+# accidental data loss or expensive keyspace scans.
+
+rename-command FLUSHALL ""
+rename-command FLUSHDB ""
+rename-command KEYS ""
+
+# --------------------------------------------------
+# PERSISTENCE POLICY
+# --------------------------------------------------
+
+# Disposable cache: persistence disabled in this
+# illustrative configuration.
+#
+# Session and queue instances use separate Redis
+# services with different persistence policies.
+
+save ""
+appendonly no
+
+# --------------------------------------------------
+# VALIDATED LABORATORY RESULTS
+# --------------------------------------------------
+
+# Cache instance:
+#
+# Redis version:     7.4
+# maxmemory:         64 MiB
+# Eviction policy:   allkeys-lru
+# Docker RAM limit:  128 MiB
+# Docker CPU limit:  0.5
+#
+# Authentication tests:
+#
+# Without credentials: NOAUTH
+# With credentials:    PONG
+# Restricted KEYS:     ERR unknown command
+#
+# --------------------------------------------------
+# ISOLATED EVICTION TEST
+# --------------------------------------------------
+
+# An independent disposable Redis container was
+# used to test LRU behavior.
+#
+# Test maxmemory:     8 MiB
+# Synthetic keys:     200
+# Evicted keys:       112
+# Remaining keys:      88
+#
+# The test did not modify the operational cache
+# or session Redis instances.
+#
+# These results verify eviction in the test
+# environment only, not production performance.
