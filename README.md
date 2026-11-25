@@ -170,6 +170,45 @@ Authorized operations were recorded with result code `0`, and the denied write o
 
 Audit records were stored in a persistent JSON log with restrictive permissions.
 
+## Security Measures
+
+The laboratory applied multiple security controls:
+
+- Internal Docker networking.
+- No direct publication of Redis or MongoDB database ports.
+- Authentication for database services.
+- Secrets excluded from source control.
+- Restricted file permissions.
+- Separate Redis instances for distinct workloads.
+- Database RBAC.
+- Native MongoDB-compatible auditing.
+- Unprivileged worker execution.
+
+## Technical Limitations
+
+This project documents educational laboratory results.
+
+- No production workload was tested.
+- No distributed high-availability deployment was implemented.
+- No exactly-once job processing guarantee was established.
+- Complete disaster recovery was not validated.
+- End-to-end encryption between all database containers was not demonstrated.
+- Performance measurements are specific to the tested environment.
+- Redis caching results do not establish overall application speed improvements.
+
+## Skills Demonstrated
+
+- Linux systems administration.
+- Docker infrastructure deployment.
+- Redis configuration and security.
+- Cache management and eviction policies.
+- Persistent session management.
+- Asynchronous job processing.
+- MongoDB-compatible database administration.
+- Role-based access control.
+- Security auditing and log verification.
+- Performance testing and technical troubleshooting.
+
 ## Technical Evidence
 
 The following screenshots were captured during the Redis and MongoDB laboratory and sanitized for public documentation.
@@ -213,45 +252,6 @@ This demonstrates both role-based access control and audit traceability for the 
 ![MongoDB denied operation audit](evidence/03-mongodb-denied-audit.png)
 
 For additional technical details, see [Redis Performance Analysis](docs/redis-performance.md), [Asynchronous Job Queue](docs/async-job-queue.md) and [MongoDB Security and Auditing](docs/mongodb-security-auditing.md).
-
-## Security Measures
-
-The laboratory applied multiple security controls:
-
-- Internal Docker networking.
-- No direct publication of Redis or MongoDB database ports.
-- Authentication for database services.
-- Secrets excluded from source control.
-- Restricted file permissions.
-- Separate Redis instances for distinct workloads.
-- Database RBAC.
-- Native MongoDB-compatible auditing.
-- Unprivileged worker execution.
-
-## Technical Limitations
-
-This project documents educational laboratory results.
-
-- No production workload was tested.
-- No distributed high-availability deployment was implemented.
-- No exactly-once job processing guarantee was established.
-- Complete disaster recovery was not validated.
-- End-to-end encryption between all database containers was not demonstrated.
-- Performance measurements are specific to the tested environment.
-- Redis caching results do not establish overall application speed improvements.
-
-## Skills Demonstrated
-
-- Linux systems administration.
-- Docker infrastructure deployment.
-- Redis configuration and security.
-- Cache management and eviction policies.
-- Persistent session management.
-- Asynchronous job processing.
-- MongoDB-compatible database administration.
-- Role-based access control.
-- Security auditing and log verification.
-- Performance testing and technical troubleshooting.
 
 ## Security and Privacy
 
