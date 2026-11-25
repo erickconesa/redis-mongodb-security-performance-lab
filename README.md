@@ -170,6 +170,50 @@ Authorized operations were recorded with result code `0`, and the denied write o
 
 Audit records were stored in a persistent JSON log with restrictive permissions.
 
+## Technical Evidence
+
+The following screenshots were captured during the Redis and MongoDB laboratory and sanitized for public documentation.
+
+### 1. Redis vs PostgreSQL — Data Access Benchmark
+
+**Validation:** Controlled comparison of equivalent data-access operations.
+
+The benchmark performed 100 measurements per data source, retrieving five category records.
+
+- PostgreSQL mean: **24.285 ms**
+- Redis mean: **0.271 ms**
+- Observed reduction: **98.88%**
+
+The PostgreSQL path opened a new connection per read, while the Redis path reused an existing client. These results do not represent full HTTP response times or an isolated comparison of database engine performance.
+
+![Redis vs PostgreSQL benchmark](evidence/01-redis-postgresql-benchmark.png)
+
+### 2. Redis — Asynchronous Worker Recovery
+
+**Validation:** Recovery and completion of a synthetic interrupted job.
+
+During the controlled test, the worker was stopped, a demonstration job was placed in the processing state, and the worker was restarted.
+
+The worker recovered one job and completed it successfully. Both pending and processing queues were empty after the test.
+
+This validates recovery in the tested single-worker scenario, not exactly-once execution or distributed fault tolerance.
+
+![Redis asynchronous worker recovery](evidence/02-redis-worker-recovery.png)
+
+### 3. MongoDB — Native Security Auditing
+
+**Validation:** An unauthorized write was denied and recorded in the native audit log.
+
+Percona Server for MongoDB 8.0 recorded an `insert` authorization check performed by a read-only user.
+
+The operation was rejected with result code `13` (`Unauthorized`).
+
+This demonstrates both role-based access control and audit traceability for the selected laboratory operation.
+
+![MongoDB denied operation audit](evidence/03-mongodb-denied-audit.png)
+
+For additional technical details, see [Redis Performance Analysis](docs/redis-performance.md), [Asynchronous Job Queue](docs/async-job-queue.md) and [MongoDB Security and Auditing](docs/mongodb-security-auditing.md).
+
 ## Security Measures
 
 The laboratory applied multiple security controls:
